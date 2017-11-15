@@ -1,4 +1,7 @@
 import java.net.*;
+
+import javax.swing.JOptionPane;
+
 import java.io.*;
 
 /**
@@ -21,7 +24,7 @@ public class EchoClientHelper1 {
    } 
 	
    public String login( String message) throws SocketException, IOException {                                                                                 
-	   	String mess = "100-LOGIN " + message;    
+	   	String mess = "100-LOGIN " + message;    	   	
       	mySocket.sendMessage( serverHost, serverPort, mess);
 
       	String response = mySocket.receiveMessage();

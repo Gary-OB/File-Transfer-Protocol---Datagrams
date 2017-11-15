@@ -1,5 +1,7 @@
 import java.io.*;
 
+import javax.swing.JOptionPane;
+
 /**
  * This module contains the presentaton logic of an Echo Client.
  * @author M. L. Liu
@@ -11,8 +13,8 @@ public class EchoClient1 {
 		  
       try {
     	  
-         String hostName = args[0];    
-         String portNum = args[1];
+         String hostName = JOptionPane.showInputDialog("Server Hostname");    
+         String portNum = JOptionPane.showInputDialog("Server PortNum"); 
         
          EchoClientHelper1 helper = 
             new EchoClientHelper1(hostName, portNum);
@@ -20,7 +22,7 @@ public class EchoClient1 {
          boolean done = false;
          String message, response;
 
-            message = args[2];
+            message = JOptionPane.showInputDialog("Server Message"); 
             
             if ((message.trim()).equals(endMessage)){
                done = true;
@@ -28,6 +30,7 @@ public class EchoClient1 {
             }
             else {
                response = helper.login(message);
+               JOptionPane.showMessageDialog(null, response);
                System.out.println(response);
             }
       } 
