@@ -40,14 +40,18 @@ public class EchoClientHelper1 {
    } 
    
    public String upload(String message, byte[] file) throws SocketException, IOException {                                                                                 
-	    String mess = "300-UPLOAD " + message;    
+	    String mess = "200-UPLOAD " + message;    
+	    System.out.println("in 6");
 		mySocket.sendMessage( serverHost, serverPort, mess);
-	
+		System.out.println("in 7");
 		String response = mySocket.receiveMessage();
-		
+		System.out.println("in 8");
 		if(response.equals("225-REQUESTRECEIVED")){
+			System.out.println("in 9");
 			mySocket.sendMessage( serverHost, serverPort, file);
+			System.out.println("in 10");
 			response = mySocket.receiveMessage();
+			System.out.println("in 11");
 		} 
 		return response;
    } 

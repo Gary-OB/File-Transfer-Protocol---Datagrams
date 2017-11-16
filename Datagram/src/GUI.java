@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
 
 public class GUI {
@@ -128,12 +129,19 @@ public class GUI {
 				try {
 					//helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());				
 					JFileChooser uploadChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-					File selectedFile = uploadChooser.getSelectedFile();
-					Path pathOfFile = (selectedFile.getAbsolutePath());
-					
-					Files.readAllBytes(selec)
-				
-					helper.upload(file, file.getBytes());
+					int returnValue = uploadChooser.showOpenDialog(null);
+					if(returnValue == JFileChooser.APPROVE_OPTION){
+						System.out.println("In if");
+						File selectedFile = uploadChooser.getSelectedFile();
+						System.out.println("In 2");
+						String fileName = selectedFile.getName();
+						System.out.println("In 3");
+						Path pathOfFile = Paths.get(selectedFile.getAbsolutePath());
+						System.out.println("In 4");
+						byte[] fileAsByte = Files.readAllBytes(pathOfFile);
+						System.out.println("In 5");
+						helper.upload(fileName, fileAsByte);
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

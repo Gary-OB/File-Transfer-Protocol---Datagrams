@@ -47,11 +47,15 @@ public class EchoServer1 {
 	          } else {
 	        	  if(message.startsWith("200-UPLOAD")) {
 	        		  try{
+	        			  System.out.println(currentUser);
 	        			  message = message.replace("200-UPLOAD", "").trim();        			  
 	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message;
 	        			  Path pathToFile = Paths.get(userDirectory);
 	        			  
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "225-REQUESTRECEIVED");
 	        			  request = mySocket.receiveMessageAndSender();
+	        			  
+	        			  System.out.println(request.toString());
 	        			  
 	        			  byte[] byteFileIn = request.getFileByteArray();
 	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
