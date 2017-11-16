@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
@@ -16,7 +17,7 @@ public class EchoServer1 {
       if (args.length == 1 )
          serverPort = Integer.parseInt(args[0]); 
       
-      String currentUser;
+      String currentUser = "";
       boolean userLoggedIn = false;
     	  
       while(true) {
@@ -38,28 +39,34 @@ public class EchoServer1 {
 	        		  if (!new File(userDirectory.trim()).exists()) {
 	        			  new File(userDirectory.trim()).mkdirs();
 	        			  userLoggedIn = true;
-	        			  mySocket.sendMessage(request.getAddress( ), request.getPort( ), currentUser + "150: Logged in Successfully");
-	        		  }
-	            		          
-	        	  } else {
-	            	mySocket.sendMessage(request.getAddress( ), request.getPort( ), "400 Not Found");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), currentUser + "150: Logged in Successfully");
+	        		  }            		          
 	        	  } 
 	          } else {
-	        	  if(message.startsWith("200")) {
+	        	  if(message.startsWith("200-UPLOAD")) {
 	        		  
 	        	  } 
 	        	  
-	        	  else if(message.startsWith("300")) {
-	        		  
+	        	  else if(message.startsWith("300-DOWNLOAD")) {
+	        		  try {
+	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message.trim();
+                                            
+	        			  byte[] fileByteArray = Files.readAllBytes(new File(userDirectory).toPath());
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), fileByteArray);
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "350: Download Successful");
+	        		  } catch (FileNotFoundException e) {
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "375: Error, file not found ");
+	        		  }
 	        	  } 
 	        	  
-	        	  else if(message.startsWith("400")) {
-	        		  
+	        	  else if(message.startsWith("400-LOGOUT")) {
+	        		  currentUser = "";
+	        		  userLoggedIn = false;
+	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), currentUser + "450: Logged out Successfully");
 	        	  }       	  
 	          }
 	      } catch (Exception ex) {
 	          ex.printStackTrace( );
-	          System.exit(0);
 		  } 
       }
    } 
