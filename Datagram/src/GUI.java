@@ -3,17 +3,30 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileSystemView;
+
+
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 
 	private JFrame frmFileTransfer;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-
+	private JTextField tbxHostname;
+	private JTextField tbxPortNo;
+	private JTextField tbxUsername;
+	private EchoClientHelper1 helper;
 	/**
 	 * Launch the application.
 	 */
@@ -69,22 +82,34 @@ public class GUI {
 		lblUsername.setBounds(10, 113, 55, 14);
 		panel.add(lblUsername);
 		
-		textField = new JTextField();
-		textField.setBounds(76, 44, 86, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		tbxHostname = new JTextField();
+		tbxHostname.setBounds(76, 44, 86, 20);
+		panel.add(tbxHostname);
+		tbxHostname.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(76, 78, 86, 20);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		tbxPortNo = new JTextField();
+		tbxPortNo.setBounds(76, 78, 86, 20);
+		panel.add(tbxPortNo);
+		tbxPortNo.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(76, 110, 86, 20);
-		panel.add(textField_2);
-		textField_2.setColumns(10);
+		tbxUsername = new JTextField();
+		tbxUsername.setBounds(76, 110, 86, 20);
+		panel.add(tbxUsername);
+		tbxUsername.setColumns(10);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());			
+					String response = helper.login(tbxUsername.getText());
+					
+					JOptionPane.showMessageDialog(null, response);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnLogin.setBounds(10, 138, 153, 23);
 		panel.add(btnLogin);
 		
@@ -96,5 +121,29 @@ public class GUI {
 		panel_1.setBounds(195, 11, 351, 209);
 		frmFileTransfer.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
+		
+		JButton btnUpload = new JButton("Upload...");
+		btnUpload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());				
+					JFileChooser uploadChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+					File selectedFile = uploadChooser.getSelectedFile();
+					Path pathOfFile = (selectedFile.getAbsolutePath());
+					
+					Files.readAllBytes(selec)
+				
+					helper.upload(file, file.getBytes());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnUpload.setBounds(129, 51, 89, 23);
+		panel_1.add(btnUpload);
+		
+		JButton btnDownload = new JButton("Download");
+		btnDownload.setBounds(129, 116, 89, 23);
+		panel_1.add(btnDownload);
 	}
 }

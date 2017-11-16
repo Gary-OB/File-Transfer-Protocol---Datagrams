@@ -34,7 +34,7 @@ public class EchoClientHelper1 {
    public String download(String message) throws SocketException, IOException {                                                                                 
 	   	String mess = "200-DOWNLOAD " + message;    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
-
+	  	
 	  	String response = mySocket.receiveMessage();
 	  	return response;
    } 
