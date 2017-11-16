@@ -39,26 +39,33 @@ public class EchoServer1 {
 	        		  String userDirectory = "C:/ServerFolders/" + currentUser;
 	            	
 	        		  if (!new File(userDirectory.trim()).exists()) {
-	        			  new File(userDirectory.trim()).mkdirs();
-	        			  userLoggedIn = true;
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), currentUser + "150: Logged in Successfully");
-	        		  }            		          
+	        			  new File(userDirectory.trim()).mkdirs();	        			  
+	        		  }    
+	        		  
+	        		  userLoggedIn = true;
+        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "150: " + currentUser + " logged in Successfully");
 	        	  } 
 	          } else {
 	        	  if(message.startsWith("200-UPLOAD")) {
 	        		  try{
 	        			  System.out.println(currentUser);
-	        			  message = message.replace("200-UPLOAD", "").trim();        			  
+	        			  System.out.println(message);
+	        			  message = message.replace("200-UPLOAD", "").trim();         			  
 	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message;
+	        			  System.out.println(userDirectory);
 	        			  Path pathToFile = Paths.get(userDirectory);
 	        			  
+	        			  System.out.println("Sending message");
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "225-REQUESTRECEIVED");
-	        			  request = mySocket.receiveMessageAndSender();
+	        			  System.out.println("Message Sent");
+	        			  String byteResponse = mySocket.receiveMessage();
 	        			  
-	        			  System.out.println(request.toString());
+	        			  System.out.println(byteResponse);
 	        			  
-	        			  byte[] byteFileIn = request.getFileByteArray();
+	        			  byte[] byteFileIn = byteResponse.getBytes(); //request.getFileByteArray();
+	        			  System.out.println("Writing tp file");
 	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
+	        			  System.out.println("Written");
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "250: File Successfully uploaded");
 	        		  } catch (FileNotFoundException e) {
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "275: Error, file not uploaded ");

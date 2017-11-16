@@ -29,32 +29,31 @@ public class EchoClientHelper1 {
 
       	String response = mySocket.receiveMessage();
       	return response;
-   } 
-   
-   public String download(String message) throws SocketException, IOException {                                                                                 
-	   	String mess = "200-DOWNLOAD " + message;    
-	  	mySocket.sendMessage( serverHost, serverPort, mess);
-	  	
-	  	String response = mySocket.receiveMessage();
-	  	return response;
-   } 
+   }  
    
    public String upload(String message, byte[] file) throws SocketException, IOException {                                                                                 
 	    String mess = "200-UPLOAD " + message;    
-	    System.out.println("in 6");
+
 		mySocket.sendMessage( serverHost, serverPort, mess);
-		System.out.println("in 7");
+		mySocket.receiveMessage();
+		mySocket.sendMessage( serverHost, serverPort, file);
 		String response = mySocket.receiveMessage();
-		System.out.println("in 8");
-		if(response.equals("225-REQUESTRECEIVED")){
-			System.out.println("in 9");
-			mySocket.sendMessage( serverHost, serverPort, file);
-			System.out.println("in 10");
-			response = mySocket.receiveMessage();
-			System.out.println("in 11");
-		} 
+		
+		//send the name of the file you want to download
+		//server sends byte array of file
+		//write the file to the desktop
 		return response;
    } 
+   
+   public String download(String message) throws SocketException, IOException {                                                                                 
+	   	String mess = "300-DOWNLOAD";    
+	  	mySocket.sendMessage( serverHost, serverPort, mess);
+	  	String response = mySocket.receiveMessage();
+	  	JOptionPane.showMessageDialog(null, response);
+	  	
+	  	
+	  	return response;
+  }
    
    public String logout(String message) throws SocketException, IOException {                                                                                 
 		String mess = "400-LOGOUT " + message;    

@@ -103,7 +103,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());			
-					String response = helper.login(tbxUsername.getText());
+					String response = helper.login(tbxUsername.getText());			
 					
 					JOptionPane.showMessageDialog(null, response);
 				} catch (IOException e1) {
@@ -131,16 +131,15 @@ public class GUI {
 					JFileChooser uploadChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 					int returnValue = uploadChooser.showOpenDialog(null);
 					if(returnValue == JFileChooser.APPROVE_OPTION){
-						System.out.println("In if");
+
 						File selectedFile = uploadChooser.getSelectedFile();
-						System.out.println("In 2");
 						String fileName = selectedFile.getName();
-						System.out.println("In 3");
 						Path pathOfFile = Paths.get(selectedFile.getAbsolutePath());
-						System.out.println("In 4");
-						byte[] fileAsByte = Files.readAllBytes(pathOfFile);
-						System.out.println("In 5");
-						helper.upload(fileName, fileAsByte);
+				
+						byte[] fileAsByte = Files.readAllBytes(pathOfFile);					
+						String response = helper.upload(fileName, fileAsByte);
+						
+						JOptionPane.showMessageDialog(null, response);
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();

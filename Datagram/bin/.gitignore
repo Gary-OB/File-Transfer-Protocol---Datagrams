@@ -1,2 +1,10 @@
+/DatagramMessage.class
+/EchoClient1.class
+/EchoClientHelper1.class
+/EchoServer1.class
+/GUI$1.class
 /GUI$2.class
 /GUI$3.class
+/GUI.class
+/MyClientDatagramSocket.class
+/MyServerDatagramSocket.class
