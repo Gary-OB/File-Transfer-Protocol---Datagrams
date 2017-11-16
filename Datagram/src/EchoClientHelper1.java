@@ -39,11 +39,16 @@ public class EchoClientHelper1 {
 	  	return response;
    } 
    
-   public String upload(String message) throws SocketException, IOException {                                                                                 
-	   	String mess = "300-UPLOAD " + message;    
+   public String upload(String message, byte[] file) throws SocketException, IOException {                                                                                 
+	    String mess = "300-UPLOAD " + message;    
 		mySocket.sendMessage( serverHost, serverPort, mess);
-
+	
 		String response = mySocket.receiveMessage();
+		
+		if(response.equals("225-REQUESTRECEIVED")){
+			mySocket.sendMessage( serverHost, serverPort, file);
+			response = mySocket.receiveMessage();
+		} 
 		return response;
    } 
    

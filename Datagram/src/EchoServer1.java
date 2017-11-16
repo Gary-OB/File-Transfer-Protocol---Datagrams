@@ -1,5 +1,8 @@
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.swing.JOptionPane;
 
@@ -30,7 +33,6 @@ public class EchoServer1 {
 	          System.out.println("Request received");
 	          
 	          String message = request.getMessage( );
-	
 	          if(!userLoggedIn) {
 	        	  if(message.startsWith("100-LOGIN")) {
 	        		  currentUser = message.replace("100-LOGIN", "").trim();
@@ -44,14 +46,28 @@ public class EchoServer1 {
 	        	  } 
 	          } else {
 	        	  if(message.startsWith("200-UPLOAD")) {
-	        		  
+	        		  try{
+	        			  message = message.replace("200-UPLOAD", "").trim();        			  
+	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message;
+	        			  Path pathToFile = Paths.get(userDirectory);
+	        			  
+	        			  request = mySocket.receiveMessageAndSender();
+	        			  
+	        			  byte[] byteFileIn = request.getFileByteArray();
+	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "250: File Successfully uploaded");
+	        		  } catch (FileNotFoundException e) {
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "275: Error, file not uploaded ");
+	        		  }
 	        	  } 
 	        	  
 	        	  else if(message.startsWith("300-DOWNLOAD")) {
-	        		  try {
-	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message.trim();
+	        		  try {	        			  
+	        			  message = message.replace("300-DOWNLOAD", "").trim();
+	        			  
+	        			  String fileDirectory = "C:/ServerFolders/" + currentUser + "/" + message.trim();
                                             
-	        			  byte[] fileByteArray = Files.readAllBytes(new File(userDirectory).toPath());
+	        			  byte[] fileByteArray = Files.readAllBytes(new File(fileDirectory).toPath());
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), fileByteArray);
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "350: Download Successful");
 	        		  } catch (FileNotFoundException e) {
