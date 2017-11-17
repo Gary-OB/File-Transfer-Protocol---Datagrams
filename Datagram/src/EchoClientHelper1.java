@@ -1,4 +1,8 @@
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.swing.JOptionPane;
 
@@ -39,21 +43,26 @@ public class EchoClientHelper1 {
 		mySocket.sendMessage( serverHost, serverPort, file);
 		String response = mySocket.receiveMessage();
 		
-		//send the name of the file you want to download
-		//server sends byte array of file
-		//write the file to the desktop
 		return response;
    } 
    
-   public String download(String message) throws SocketException, IOException {                                                                                 
-	   	String mess = "300-DOWNLOAD";    
+   public String[] populateDownloadArray(String message) throws SocketException, IOException {                                                                                 
+	   	String mess = "300-LISTFILES";    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
 	  	String response = mySocket.receiveMessage();
-	  	JOptionPane.showMessageDialog(null, response);
+	  	String[] fileList = response.split(",");	  	
 	  	
+	  	return fileList;
+   }
+   
+   public void download(String location, String fileToDownload) throws SocketException, IOException {                                                                                 
+	  	mySocket.sendMessage( serverHost, serverPort, fileToDownload);
+	  	byte[] response = mySocket.receiveByteArray();
 	  	
-	  	return response;
-  }
+	  	Path toClientFolder = Paths.get(location);
+	  	
+	  	Files.write(toClientFolder, response, StandardOpenOption.CREATE);
+   }
    
    public String logout(String message) throws SocketException, IOException {                                                                                 
 		String mess = "400-LOGOUT " + message;    

@@ -72,7 +72,7 @@ public class EchoServer1 {
 	        		  }
 	        	  } 
 	        	  
-	        	  else if(message.startsWith("300-DOWNLOAD")) {
+	        	  else if(message.startsWith("300-LISTFILES")) {
 	        		  try {	        			  
 	        			  message = message.replace("300-DOWNLOAD", "").trim();
 	        			  
