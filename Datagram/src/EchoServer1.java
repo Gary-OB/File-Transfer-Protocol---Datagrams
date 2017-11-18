@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +64,7 @@ public class EchoServer1 {
 	        			  System.out.println(byteResponse);
 	        			  
 	        			  byte[] byteFileIn = byteResponse.getBytes(); //request.getFileByteArray();
-	        			  System.out.println("Writing tp file");
+	        			  System.out.println("Writing to file");
 	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
 	        			  System.out.println("Written");
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "250: File Successfully uploaded");
@@ -74,13 +75,38 @@ public class EchoServer1 {
 	        	  
 	        	  else if(message.startsWith("300-LISTFILES")) {
 	        		  try {	        			  
-	        			  message = message.replace("300-DOWNLOAD", "").trim();
+	        			 	        			  
+	        			  String fileDirectory = "C:\\ServerFolders\\" + currentUser;
+                                      
+	        			  File userFolder = new File(fileDirectory);
 	        			  
-	        			  String fileDirectory = "C:/ServerFolders/" + currentUser + "/" + message.trim();
-                                            
-	        			  byte[] fileByteArray = Files.readAllBytes(new File(fileDirectory).toPath());
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), fileByteArray);
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "350: Download Successful");
+	        			  File[] listOfFiles = userFolder.listFiles();
+	        			  String filesAsString = "";
+	        			  
+	        			  
+	        			  for(int i = 0; i < listOfFiles.length; i++) {
+	        				 filesAsString += listOfFiles[i].getName() + ",";
+	        			  }
+	        			  
+	        			  System.out.println("Sending message");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), filesAsString);
+	        			  System.out.println("Message sent");
+	        			  
+	        			  ////////////////////////////////////////////////////////////////////////////
+	        			  
+	        			  System.out.println("receiving message");
+	        			  String fileToDownload = mySocket.receiveMessage();
+	        			  System.out.println("received");
+	        			  
+	        			  fileToDownload = fileToDownload.trim();
+	        			  
+	        			  Path locationOfFile = Paths.get(fileDirectory, fileToDownload);
+	        			  
+	        			  byte[] fileAsByte = Files.readAllBytes(locationOfFile);	
+
+	        			 
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), fileAsByte);
+	        			  //mySocket.sendMessage(request.getAddress(), request.getPort(), "350: Download Successful");
 	        		  } catch (FileNotFoundException e) {
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "375: Error, file not found ");
 	        		  }
@@ -93,7 +119,8 @@ public class EchoServer1 {
 	        	  }       	  
 	          }
 	      } catch (Exception ex) {
-	          ex.printStackTrace( );
+	          //JOptionPane.showMessageDialog(null, ex.getMessage());
+	    	  ex.printStackTrace();
 		  } 
       }
    } 

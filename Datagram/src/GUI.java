@@ -9,6 +9,7 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class GUI {
 
@@ -146,11 +148,46 @@ public class GUI {
 				}
 			}
 		});
-		btnUpload.setBounds(129, 51, 89, 23);
+		btnUpload.setBounds(10, 43, 89, 23);
 		panel_1.add(btnUpload);
 		
-		JButton btnDownload = new JButton("Download");
-		btnDownload.setBounds(129, 116, 89, 23);
-		panel_1.add(btnDownload);
+		JButton btnGetDownloadFiles = new JButton("Download");
+		btnGetDownloadFiles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+			
+					String[] arrayOfFilenames = helper.populateDownloadArray();
+					
+					String fileToDownload = (String) JOptionPane.showInputDialog(null, "Choose file to download... ", "Download", 
+							JOptionPane.QUESTION_MESSAGE, null, arrayOfFilenames, arrayOfFilenames[1]);
+					
+					fileToDownload = fileToDownload.trim();
+					
+					JFileChooser downloadPathChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+					downloadPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					
+					downloadPathChooser.showSaveDialog(null);
+				
+					File folderForDownload = downloadPathChooser.getSelectedFile(); //getCurrentDirectory();
+						
+					String folderName = folderForDownload.getPath();
+					
+					
+					
+					helper.download(folderName, fileToDownload);	
+						
+					JOptionPane.showMessageDialog(null, "Downloaded File", "Success", JOptionPane.INFORMATION_MESSAGE);
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnGetDownloadFiles.setBounds(10, 127, 89, 23);
+		panel_1.add(btnGetDownloadFiles);
+		
+		JComboBox cboDownloadFiles = new JComboBox();
+		cboDownloadFiles.setBounds(109, 128, 89, 20);
+		panel_1.add(cboDownloadFiles);
 	}
 }
