@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.SocketException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,20 +17,24 @@ import javax.swing.JOptionPane;
  */
 
 public class EchoServer1 {
-   public static void main(String[] args) {
+   public static void main(String[] args) throws SocketException {
       int serverPort = 7;    
       if (args.length == 1 )
          serverPort = Integer.parseInt(args[0]); 
       
       String currentUser = "";
       boolean userLoggedIn = false;
+      MyServerDatagramSocket mySocket = new MyServerDatagramSocket(serverPort); 
     	  
       while(true) {
 	      try {
 	    	  	    	  
-	   	   	  MyServerDatagramSocket mySocket = new MyServerDatagramSocket(serverPort); 
-	          System.out.println("Echo server ready.");  
-	         
+
+	    	  
+	    	  System.out.println("Echo server ready.");  
+ 
+	    		  
+	    		  
 	          DatagramMessage request = mySocket.receiveMessageAndSender();
 	          System.out.println("Request received");
 	          
@@ -93,6 +98,7 @@ public class EchoServer1 {
 	        			  System.out.println("Message sent");
 	        			  
 	        			  ////////////////////////////////////////////////////////////////////////////
+
 	        			  
 	        			  System.out.println("receiving message");
 	        			  String fileToDownload = mySocket.receiveMessage();
@@ -115,7 +121,7 @@ public class EchoServer1 {
 	        	  else if(message.startsWith("400-LOGOUT")) {
 	        		  currentUser = "";
 	        		  userLoggedIn = false;
-	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), currentUser + "450: Logged out Successfully");
+	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "450: " + currentUser + "logged out Successfully");
 	        	  }       	  
 	          }
 	      } catch (Exception ex) {

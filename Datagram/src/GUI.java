@@ -30,6 +30,11 @@ public class GUI {
 	private JTextField tbxPortNo;
 	private JTextField tbxUsername;
 	private EchoClientHelper1 helper;
+	
+	private JButton btnLogin = new JButton("Login");
+	private JButton btnLogout = new JButton("Logout");
+	private JButton btnUpload = new JButton("Upload...");
+	private JButton btnDownload = new JButton("Download...");
 	/**
 	 * Launch the application.
 	 */
@@ -58,74 +63,93 @@ public class GUI {
 	 */
 	private void initialize() {
 		frmFileTransfer = new JFrame();
+		frmFileTransfer.setResizable(false);
 		frmFileTransfer.setTitle("File Transfer");
-		frmFileTransfer.setBounds(100, 100, 572, 270);
+		frmFileTransfer.setBounds(100, 100, 247, 326);
 		frmFileTransfer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmFileTransfer.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 175, 209);
+		panel.setBounds(10, 11, 211, 187);
 		frmFileTransfer.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblLoginDetails = new JLabel("Login Details");
 		lblLoginDetails.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLoginDetails.setBounds(56, 11, 85, 22);
+		lblLoginDetails.setBounds(66, 11, 85, 22);
 		panel.add(lblLoginDetails);
 		
 		JLabel lblHostname = new JLabel("Hostname");
-		lblHostname.setBounds(10, 44, 55, 14);
+		lblHostname.setBounds(10, 44, 65, 14);
 		panel.add(lblHostname);
 		
 		JLabel lblPortNo = new JLabel("Port No");
-		lblPortNo.setBounds(10, 81, 46, 14);
+		lblPortNo.setBounds(10, 69, 65, 14);
 		panel.add(lblPortNo);
 		
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(10, 113, 55, 14);
+		lblUsername.setBounds(10, 94, 65, 14);
 		panel.add(lblUsername);
 		
 		tbxHostname = new JTextField();
-		tbxHostname.setBounds(76, 44, 86, 20);
+		tbxHostname.setBounds(85, 41, 116, 20);
 		panel.add(tbxHostname);
 		tbxHostname.setColumns(10);
 		
 		tbxPortNo = new JTextField();
-		tbxPortNo.setBounds(76, 78, 86, 20);
+		tbxPortNo.setBounds(85, 66, 116, 20);
 		panel.add(tbxPortNo);
 		tbxPortNo.setColumns(10);
 		
 		tbxUsername = new JTextField();
-		tbxUsername.setBounds(76, 110, 86, 20);
+		tbxUsername.setBounds(85, 91, 116, 20);
 		panel.add(tbxUsername);
 		tbxUsername.setColumns(10);
 		
-		JButton btnLogin = new JButton("Login");
+		tbxHostname.setText("localhost");
+		tbxPortNo.setText("7");
+		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());			
 					String response = helper.login(tbxUsername.getText());			
 					
-					JOptionPane.showMessageDialog(null, response);
+					JOptionPane.showMessageDialog(null, response, "Logged in", JOptionPane.INFORMATION_MESSAGE);
+					enableControls(true);
+				
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		btnLogin.setBounds(10, 138, 153, 23);
+		btnLogin.setBounds(10, 119, 191, 23);
 		panel.add(btnLogin);
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					String response = helper.logout();
+					enableControls(false);
+					JOptionPane.showMessageDialog(null, response, "Logged out", JOptionPane.INFORMATION_MESSAGE);
+					tbxUsername.setText("");
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}			
+			}
+		});
 		
-		JButton btnLogout = new JButton("Logout");
-		btnLogout.setBounds(10, 172, 152, 23);
+		
+		btnLogout.setEnabled(false);
+		btnLogout.setBounds(10, 153, 191, 23);
 		panel.add(btnLogout);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(195, 11, 351, 209);
+		panel_1.setBounds(10, 209, 211, 78);
 		frmFileTransfer.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
-		
-		JButton btnUpload = new JButton("Upload...");
+				
+		btnUpload.setEnabled(false);
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -148,11 +172,12 @@ public class GUI {
 				}
 			}
 		});
-		btnUpload.setBounds(10, 43, 89, 23);
+		btnUpload.setBounds(10, 11, 191, 23);
 		panel_1.add(btnUpload);
 		
-		JButton btnGetDownloadFiles = new JButton("Download");
-		btnGetDownloadFiles.addActionListener(new ActionListener() {
+		
+		btnDownload.setEnabled(false);
+		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 			
@@ -183,11 +208,20 @@ public class GUI {
 				}
 			}
 		});
-		btnGetDownloadFiles.setBounds(10, 127, 89, 23);
-		panel_1.add(btnGetDownloadFiles);
-		
-		JComboBox cboDownloadFiles = new JComboBox();
-		cboDownloadFiles.setBounds(109, 128, 89, 20);
-		panel_1.add(cboDownloadFiles);
+		btnDownload.setBounds(10, 45, 191, 23);
+		panel_1.add(btnDownload);
 	}
+	
+	public void enableControls(boolean yesOrNo) {
+		
+		btnLogin.setEnabled(!yesOrNo);
+		tbxHostname.setEnabled(!yesOrNo);
+		tbxPortNo.setEnabled(!yesOrNo);
+		tbxUsername.setEnabled(!yesOrNo);
+		
+		btnLogout.setEnabled(yesOrNo);
+		btnUpload.setEnabled(yesOrNo);
+		btnDownload.setEnabled(yesOrNo);
+	}
+	
 }

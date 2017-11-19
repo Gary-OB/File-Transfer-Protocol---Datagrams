@@ -73,8 +73,8 @@ public class EchoClientHelper1 {
 	  	System.out.println("Written to file");
    }
    
-   public String logout(String message) throws SocketException, IOException {                                                                                 
-		String mess = "400-LOGOUT " + message;    
+   public String logout() throws SocketException, IOException {                                                                                 
+		String mess = "400-LOGOUT";   
 		mySocket.sendMessage( serverHost, serverPort, mess);
 
 		String response = mySocket.receiveMessage();
