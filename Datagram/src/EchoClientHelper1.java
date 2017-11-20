@@ -47,7 +47,7 @@ public class EchoClientHelper1 {
    } 
    
    public String[] populateDownloadArray() throws SocketException, IOException {                                                                                 
-	   	String mess = "300-LISTFILES";    
+	   	String mess = "300-DOWNLOAD";    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
 	  	String response = mySocket.receiveMessage();
 	  	String[] fileList = response.split(",");	  	
@@ -55,22 +55,22 @@ public class EchoClientHelper1 {
 	  	return fileList;
    }
    
-   public void download(String location, String fileToDownload) throws SocketException, IOException {  
-	    System.out.println("Sending download message " + location + ", " + fileToDownload);
-	    
+   public String download(String location, String fileToDownload) throws SocketException, IOException {  
+	    System.out.println("Sending download message " + location + ", " + fileToDownload);	    
 	  	mySocket.sendMessage( serverHost, serverPort, fileToDownload);
 	  	System.out.println("Sent");
 
-	  	byte[] response = mySocket.receiveByteArray();
-	  	
+	  	byte[] response = mySocket.receiveByteArray();	  	
 	  	
 	  	System.out.println("Got bytes");
-	  	Path toClientFolder = Paths.get(location + "\\" + fileToDownload);
-	  	
+	  	Path toClientFolder = Paths.get(location + "\\" + fileToDownload);	  	
 	  	
 	  	System.out.println("Trying to write to folder");
 	  	Files.write(toClientFolder, response, StandardOpenOption.CREATE);
 	  	System.out.println("Written to file");
+	  	String messageResponse = mySocket.receiveMessage();
+	  	
+	  	return messageResponse;
    }
    
    public String logout() throws SocketException, IOException {                                                                                 

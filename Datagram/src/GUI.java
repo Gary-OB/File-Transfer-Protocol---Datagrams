@@ -113,11 +113,14 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());			
-					String response = helper.login(tbxUsername.getText());			
 					
-					JOptionPane.showMessageDialog(null, response, "Logged in", JOptionPane.INFORMATION_MESSAGE);
-					enableControls(true);
-				
+					if(tbxUsername.getText().trim().equals("")){
+						JOptionPane.showMessageDialog(null, "Enter a valid username", "Invalid Username", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						String response = helper.login(tbxUsername.getText());													
+						JOptionPane.showMessageDialog(null, response, "Logged in", JOptionPane.INFORMATION_MESSAGE);
+						swapEnabledControls(true);		
+					}
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -125,21 +128,20 @@ public class GUI {
 		});
 		btnLogin.setBounds(10, 119, 191, 23);
 		panel.add(btnLogin);
+		
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
 					String response = helper.logout();
-					enableControls(false);
+					swapEnabledControls(false);
 					JOptionPane.showMessageDialog(null, response, "Logged out", JOptionPane.INFORMATION_MESSAGE);
 					tbxUsername.setText("");
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}			
 			}
-		});
-		
-		
+		});	
 		btnLogout.setEnabled(false);
 		btnLogout.setBounds(10, 153, 191, 23);
 		panel.add(btnLogout);
@@ -162,13 +164,14 @@ public class GUI {
 						String fileName = selectedFile.getName();
 						Path pathOfFile = Paths.get(selectedFile.getAbsolutePath());
 				
-						byte[] fileAsByte = Files.readAllBytes(pathOfFile);					
+						byte[] fileAsByte = new byte[1024];
+						fileAsByte = Files.readAllBytes(pathOfFile);					
 						String response = helper.upload(fileName, fileAsByte);
 						
-						JOptionPane.showMessageDialog(null, response);
+						JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
 					}
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -184,27 +187,21 @@ public class GUI {
 					String[] arrayOfFilenames = helper.populateDownloadArray();
 					
 					String fileToDownload = (String) JOptionPane.showInputDialog(null, "Choose file to download... ", "Download", 
-							JOptionPane.QUESTION_MESSAGE, null, arrayOfFilenames, arrayOfFilenames[1]);
-					
+							JOptionPane.QUESTION_MESSAGE, null, arrayOfFilenames, arrayOfFilenames[1]);				
 					fileToDownload = fileToDownload.trim();
 					
 					JFileChooser downloadPathChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-					downloadPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					downloadPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);				
+					downloadPathChooser.showSaveDialog(null);	
 					
-					downloadPathChooser.showSaveDialog(null);
-				
-					File folderForDownload = downloadPathChooser.getSelectedFile(); //getCurrentDirectory();
-						
+					File folderForDownload = downloadPathChooser.getSelectedFile(); //getCurrentDirectory();					
 					String folderName = folderForDownload.getPath();
-					
-					
-					
-					helper.download(folderName, fileToDownload);	
-						
-					JOptionPane.showMessageDialog(null, "Downloaded File", "Success", JOptionPane.INFORMATION_MESSAGE);
+									
+					String response = helper.download(folderName, fileToDownload);							
+					JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
 					
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -212,16 +209,16 @@ public class GUI {
 		panel_1.add(btnDownload);
 	}
 	
-	public void enableControls(boolean yesOrNo) {
+	public void swapEnabledControls(boolean swapped) {
 		
-		btnLogin.setEnabled(!yesOrNo);
-		tbxHostname.setEnabled(!yesOrNo);
-		tbxPortNo.setEnabled(!yesOrNo);
-		tbxUsername.setEnabled(!yesOrNo);
+		btnLogin.setEnabled(!swapped);
+		tbxHostname.setEnabled(!swapped);
+		tbxPortNo.setEnabled(!swapped);
+		tbxUsername.setEnabled(!swapped);
 		
-		btnLogout.setEnabled(yesOrNo);
-		btnUpload.setEnabled(yesOrNo);
-		btnDownload.setEnabled(yesOrNo);
+		btnLogout.setEnabled(swapped);
+		btnUpload.setEnabled(swapped);
+		btnDownload.setEnabled(swapped);
 	}
 	
 }
