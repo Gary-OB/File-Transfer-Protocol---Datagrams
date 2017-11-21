@@ -13,12 +13,12 @@ import java.io.*;
  * for an Echo client using connectionless datagram socket.
  * @author M. L. Liu
  */
-public class EchoClientHelper1 {
+public class ClientHelper {
    private MyClientDatagramSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
 
-   EchoClientHelper1(String hostName, String portNum) 
+   ClientHelper(String hostName, String portNum) 
       throws SocketException, UnknownHostException { 
   	   this.serverHost = InetAddress.getByName(hostName);
   		this.serverPort = Integer.parseInt(portNum);
@@ -38,16 +38,16 @@ public class EchoClientHelper1 {
    public String upload(String message, byte[] file) throws SocketException, IOException {                                                                                 
 	    String mess = "200-UPLOAD " + message;    
 
-		mySocket.sendMessage( serverHost, serverPort, mess);
+		mySocket.sendMessage(serverHost, serverPort, mess);
 		mySocket.receiveMessage();
-		mySocket.sendMessage( serverHost, serverPort, file);
+		mySocket.sendMessage(serverHost, serverPort, file);
 		String response = mySocket.receiveMessage();
 		
 		return response;
    } 
    
    public String[] populateDownloadArray() throws SocketException, IOException {                                                                                 
-	   	String mess = "300-DOWNLOAD";    
+	   	String mess = "300-DOWNLOADREQUEST";    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
 	  	String response = mySocket.receiveMessage();
 	  	String[] fileList = response.split(",");	  	
@@ -57,6 +57,8 @@ public class EchoClientHelper1 {
    
    public String download(String location, String fileToDownload) throws SocketException, IOException {  
 	    System.out.println("Sending download message " + location + ", " + fileToDownload);	    
+	    
+	    fileToDownload = "325-DOWNLOADFILE " + fileToDownload;
 	  	mySocket.sendMessage( serverHost, serverPort, fileToDownload);
 	  	System.out.println("Sent");
 

@@ -29,7 +29,7 @@ public class GUI {
 	private JTextField tbxHostname;
 	private JTextField tbxPortNo;
 	private JTextField tbxUsername;
-	private EchoClientHelper1 helper;
+	private ClientHelper helper;
 	
 	private JButton btnLogin = new JButton("Login");
 	private JButton btnLogout = new JButton("Logout");
@@ -112,7 +112,7 @@ public class GUI {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());			
+					helper = new ClientHelper(tbxHostname.getText(), tbxPortNo.getText());			
 					
 					if(tbxUsername.getText().trim().equals("")){
 						JOptionPane.showMessageDialog(null, "Enter a valid username", "Invalid Username", JOptionPane.INFORMATION_MESSAGE);

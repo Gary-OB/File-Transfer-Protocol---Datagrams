@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author M. L. Liu
  */
 
-public class EchoServer1 {
+public class Server {
    public static void main(String[] args) throws SocketException {
       int serverPort = 7;    
       if (args.length == 1 )
@@ -28,13 +28,9 @@ public class EchoServer1 {
     	  
       while(true) {
 	      try {
-	    	  	    	  
-
 	    	  
 	    	  System.out.println("Echo server ready.");  
- 
-	    		  
-	    		  
+ 		  
 	          DatagramMessage request = mySocket.receiveMessageAndSender();
 	          System.out.println("Request received");
 	          
@@ -49,7 +45,7 @@ public class EchoServer1 {
 	        		  }    
 	        		  
 	        		  userLoggedIn = true;
-        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "150: " + currentUser + " logged in Successfully");
+        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "150-LOGINSUCCESSFUL");
 	        	  } 
 	          } else {
 	        	  if(message.startsWith("200-UPLOAD")) {
@@ -72,13 +68,13 @@ public class EchoServer1 {
 	        			  System.out.println("Writing to file");
 	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
 	        			  System.out.println("Written");
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "250: File Successfully uploaded");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "250-UPLOADSUCCESSFUL");
 	        		  } catch (FileNotFoundException e) {
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "275: Error, file not uploaded ");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "275-FILENOTUPLOADED");
 	        		  }
 	        	  } 
 	        	  
-	        	  else if(message.startsWith("300-DOWNLOAD")) {
+	        	  else if(message.startsWith("300-DOWNLOADREQUEST")) {
 	        		  try {	        			  
 	        			 	        			  
 	        			  String fileDirectory = "C:\\ServerFolders\\" + currentUser;
@@ -95,15 +91,17 @@ public class EchoServer1 {
 	        			  
 	        			  System.out.println("receiving message");
 	        			  String fileToDownload = mySocket.receiveMessage();
+	        			  fileToDownload = fileToDownload.replace("325-DOWNLOADFILE", "").trim();
+	        			  
 	        			  System.out.println("received");        			  
 	        			  fileToDownload = fileToDownload.trim();	        			  
 	        			  Path locationOfFile = Paths.get(fileDirectory, fileToDownload);	        			  
 	        			  byte[] fileAsByte = Files.readAllBytes(locationOfFile);	
 	        			 
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), fileAsByte);
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "350: Download Successful");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "350-DOWNLOADSUCCESSFUL");
 	        		  } catch (FileNotFoundException e) {
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "375: Error, file not found ");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "375-FILENOTFOUND");
 	        		  }
 	        	  } 
 	        	  
@@ -111,7 +109,7 @@ public class EchoServer1 {
 	        		  
 	        		  currentUser = "";
 	        		  userLoggedIn = false;
-	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "450: " + currentUser + "logged out Successfully");
+	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "450-LOGOUTSUCCESSFUL");
 	        	  }       	  
 	          }
 	      } catch (Exception ex) {

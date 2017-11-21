@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
  * This module contains the presentaton logic of an Echo Client.
  * @author M. L. Liu
  */
-public class EchoClient1 {
+public class Client {
    static final String endMessage = ".";
    public static void main(String[] args) {
 	   
@@ -16,8 +16,8 @@ public class EchoClient1 {
          String hostName = JOptionPane.showInputDialog("Server Hostname");    
          String portNum = JOptionPane.showInputDialog("Server PortNum"); 
         
-         EchoClientHelper1 helper = 
-            new EchoClientHelper1(hostName, portNum);
+         ClientHelper helper = 
+            new ClientHelper(hostName, portNum);
          
          boolean done = false;
          String message, response;
