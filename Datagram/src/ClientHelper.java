@@ -50,6 +50,7 @@ public class ClientHelper {
 	   	String mess = "300-DOWNLOADREQUEST";    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
 	  	String response = mySocket.receiveMessage();
+	  	response = response.replaceAll("315-REQUESTRECEIVED", "").trim();
 	  	String[] fileList = response.split(",");	  	
 	  	
 	  	return fileList;

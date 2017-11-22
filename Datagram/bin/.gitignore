@@ -1,6 +1,6 @@
+/Client.class
 /ClientHelper.class
 /DatagramMessage.class
-/EchoClient1.class
 /GUI$1.class
 /GUI$2.class
 /GUI$3.class
@@ -10,4 +10,3 @@
 /MyClientDatagramSocket.class
 /MyServerDatagramSocket.class
 /Server.class
-/Client.class

@@ -80,7 +80,7 @@ public class Server {
 	        			  String fileDirectory = "C:\\ServerFolders\\" + currentUser;
 	        			  File userFolder = new File(fileDirectory);	        			  
 	        			  File[] listOfFiles = userFolder.listFiles();
-	        			  String filesAsString = "";
+	        			  String filesAsString = "315-REQUESTRECEIVED ";
 	        			          			  
 	        			  for(int i = 0; i < listOfFiles.length; i++) {
 	        				 filesAsString += listOfFiles[i].getName() + ",";
