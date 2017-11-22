@@ -38,14 +38,21 @@ public class Server {
 	          if(!userLoggedIn) {
 	        	  if(message.startsWith("100-LOGIN")) {
 	        		  currentUser = message.replace("100-LOGIN", "").trim();
-	        		  String userDirectory = "C:/ServerFolders/" + currentUser;
+	        		  String directoryToUser = "C:/ServerFolders/" + currentUser;
 	            	
-	        		  if (!new File(userDirectory.trim()).exists()) {
-	        			  new File(userDirectory.trim()).mkdirs();	        			  
-	        		  }    
-	        		  
-	        		  userLoggedIn = true;
-        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "150-LOGINSUCCESSFUL");
+	        		  if (!new File(directoryToUser.trim()).exists()) {
+	        			  if (!new File(directoryToUser.trim()).mkdirs()) {
+	                            mySocket.sendMessage(request.getAddress(), request.getPort(), "175-INVALIDUSERNAME");
+	                      } else {
+	                    	    new File(directoryToUser.trim()).mkdirs();
+	                    	    userLoggedIn = true;
+	                    	    mySocket.sendMessage(request.getAddress(), request.getPort(), "150-LOGINSUCCESSFUL");
+	                      }     			  	        			  
+	        		  } else {
+	        			  userLoggedIn = true;
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "150-LOGINSUCCESSFUL");
+	        		  }
+	        		         		  
 	        	  } 
 	          } else {
 	        	  if(message.startsWith("200-UPLOAD")) {
@@ -54,9 +61,9 @@ public class Server {
 	        			  System.out.println(currentUser);
 	        			  System.out.println(message);
 	        			  message = message.replace("200-UPLOAD", "").trim();         			  
-	        			  String userDirectory = "C:/ServerFolders/" + currentUser + "/" + message;
-	        			  System.out.println(userDirectory);
-	        			  Path pathToFile = Paths.get(userDirectory);
+	        			  String currentDirectory = "C:/ServerFolders/" + currentUser + "/" + message;
+	        			  System.out.println(currentDirectory);
+	        			  Path pathToFile = Paths.get(currentDirectory);
 	        			  
 	        			  System.out.println("Sending message");
 	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "225-REQUESTRECEIVED");
@@ -110,11 +117,14 @@ public class Server {
 	        		  currentUser = "";
 	        		  userLoggedIn = false;
 	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "450-LOGOUTSUCCESSFUL");
-	        	  }       	  
+	        	  }    
+	        	  
+	        	  else {
+	        		  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "700-INVALIDREQUEST");
+	        	  }
 	          }
-	      } catch (Exception ex) {
-	          //JOptionPane.showMessageDialog(null, ex.getMessage());
-	    	  ex.printStackTrace();
+	      } catch (IOException ex) {
+	    	  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "700-INVALIDREQUEST");
 		  } 
       }
    } 
