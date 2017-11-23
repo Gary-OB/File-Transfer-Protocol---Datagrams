@@ -187,7 +187,7 @@ public class ClientGUI {
 					String[] arrayOfFilenames = helper.populateDownloadArray();
 					
 					String fileToDownload = (String) JOptionPane.showInputDialog(null, "Choose file to download... ", "Download", 
-							JOptionPane.QUESTION_MESSAGE, null, arrayOfFilenames, arrayOfFilenames[1]);				
+							JOptionPane.QUESTION_MESSAGE, null, arrayOfFilenames, arrayOfFilenames[0]);				
 					fileToDownload = fileToDownload.trim();
 					
 					JFileChooser downloadPathChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
