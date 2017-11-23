@@ -41,6 +41,16 @@ static final int MAX_LEN = 100;
          String message = new String(receiveBuffer);
          return message;
    } //end receiveMessage
+   
+   public byte[] receiveByteArray( )
+			throws IOException {		
+	         byte[ ] receiveBuffer = new byte[MAX_LEN];
+	         DatagramPacket datagram =
+	            new DatagramPacket(receiveBuffer, MAX_LEN);
+	         this.receive(datagram);
+
+	         return receiveBuffer;
+	   } //end receiveMessage
 
    public DatagramMessage receiveMessageAndSender( )
 		throws IOException {		

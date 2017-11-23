@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
-public class GUI {
+public class ClientGUI {
 
 	private JFrame frmFileTransfer;
 	private JTextField tbxHostname;
@@ -42,7 +42,7 @@ public class GUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI window = new GUI();
+					ClientGUI window = new ClientGUI();
 					window.frmFileTransfer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class GUI {
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
+	public ClientGUI() {
 		initialize();
 	}
 

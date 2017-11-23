@@ -66,12 +66,11 @@ public class Server {
 	        			  Path pathToFile = Paths.get(currentDirectory);
 	        			  
 	        			  System.out.println("Sending message");
-	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "225-REQUESTRECEIVED");
+	        			  mySocket.sendMessage(request.getAddress(), request.getPort(), "225-UPLOADREQUESTRECEIVED");
 	        			  System.out.println("Message Sent");
-	        			  String byteResponse = mySocket.receiveMessage();	       			  
-	        			  System.out.println(byteResponse);
+	        			  byte[] byteFileIn = mySocket.receiveByteArray();	       			  
+	        			  System.out.println(byteFileIn.toString());
 	        			  
-	        			  byte[] byteFileIn = byteResponse.getBytes();
 	        			  System.out.println("Writing to file");
 	        			  Files.write(pathToFile, byteFileIn, StandardOpenOption.CREATE);
 	        			  System.out.println("Written");
@@ -87,7 +86,7 @@ public class Server {
 	        			  String fileDirectory = "C:\\ServerFolders\\" + currentUser;
 	        			  File userFolder = new File(fileDirectory);	        			  
 	        			  File[] listOfFiles = userFolder.listFiles();
-	        			  String filesAsString = "315-REQUESTRECEIVED ";
+	        			  String filesAsString = "315-DOWNLOADREQUESTRECEIVED ";
 	        			          			  
 	        			  for(int i = 0; i < listOfFiles.length; i++) {
 	        				 filesAsString += listOfFiles[i].getName() + ",";
@@ -124,7 +123,7 @@ public class Server {
 	        	  }
 	          }
 	      } catch (IOException ex) {
-	    	  mySocket.sendMessage(request.getAddress( ), request.getPort( ), "700-INVALIDREQUEST");
+	    	  System.out.println("Invalid input: error interpreting message");
 		  } 
       }
    } 

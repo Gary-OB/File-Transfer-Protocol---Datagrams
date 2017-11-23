@@ -6,12 +6,12 @@ import java.io.*;
  * methods for sending and receiving messages
  * @author M. L. Liu
  */
-public class MyClientDatagramSocket extends DatagramSocket {
+public class ClientDatagramSocket extends DatagramSocket {
 static final int MAX_LEN = 100;  
-   MyClientDatagramSocket( ) throws SocketException{
+   ClientDatagramSocket( ) throws SocketException{
      super( );
    }
-   MyClientDatagramSocket(int portNo) throws SocketException{
+   ClientDatagramSocket(int portNo) throws SocketException{
      super(portNo);
    }
    public void sendMessage(InetAddress receiverHost, int receiverPort, String message) throws IOException {	

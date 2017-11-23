@@ -14,7 +14,7 @@ import java.io.*;
  * @author M. L. Liu
  */
 public class ClientHelper {
-   private MyClientDatagramSocket mySocket;
+   private ClientDatagramSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
 
@@ -24,7 +24,7 @@ public class ClientHelper {
   		this.serverPort = Integer.parseInt(portNum);
 
   		
-   	this.mySocket = new MyClientDatagramSocket(); 
+   	this.mySocket = new ClientDatagramSocket(); 
    } 
 	
    public String login( String message) throws SocketException, IOException {                                                                                 
