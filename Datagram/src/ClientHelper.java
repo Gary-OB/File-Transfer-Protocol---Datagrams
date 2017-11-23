@@ -50,7 +50,7 @@ public class ClientHelper {
 	   	String mess = "300-DOWNLOADREQUEST";    
 	  	mySocket.sendMessage( serverHost, serverPort, mess);
 	  	String response = mySocket.receiveMessage();
-	  	response = response.replaceAll("315-DOWNLOADREQUESTRECEIVED", "").trim();
+	  	response = response.replace("315-DOWNLOADREQUESTRECEIVED", "").trim();
 	  	String[] fileList = response.split(",");	  	
 	  	
 	  	return fileList;
@@ -66,6 +66,8 @@ public class ClientHelper {
 	  	byte[] response = mySocket.receiveByteArray();	  	
 	  	
 	  	System.out.println("Got bytes");
+	  	
+	  	fileToDownload = fileToDownload.replace("325-DOWNLOADFILE", "").trim();
 	  	Path toClientFolder = Paths.get(location + "\\" + fileToDownload);	  	
 	  	
 	  	System.out.println("Trying to write to folder");
