@@ -7,9 +7,9 @@ import java.io.*;
  * @author M. L. Liu
  */
 
-public class MyServerDatagramSocket extends DatagramSocket {
+public class ServerDatagramSocket extends DatagramSocket {
 static final int MAX_LEN = 100; 
-   MyServerDatagramSocket(int portNo) throws SocketException{
+   ServerDatagramSocket(int portNo) throws SocketException{
      super(portNo);
    }
    public void sendMessage(InetAddress receiverHost,

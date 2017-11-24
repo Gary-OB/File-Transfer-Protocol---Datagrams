@@ -155,7 +155,6 @@ public class ClientGUI {
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//helper = new EchoClientHelper1(tbxHostname.getText(), tbxPortNo.getText());				
 					JFileChooser uploadChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 					int returnValue = uploadChooser.showOpenDialog(null);
 					if(returnValue == JFileChooser.APPROVE_OPTION){

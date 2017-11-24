@@ -69,7 +69,7 @@ public class ClientHelper {
 	  	
 	  	fileToDownload = fileToDownload.replace("325-DOWNLOADFILE", "").trim();
 	  	Path toClientFolder = Paths.get(location + "\\" + fileToDownload);	  	
-	  	
+	  		
 	  	System.out.println("Trying to write to folder");
 	  	Files.write(toClientFolder, response, StandardOpenOption.CREATE);
 	  	System.out.println("Written to file");

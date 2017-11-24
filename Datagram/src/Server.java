@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class Server {
 	
 	static int serverPort = 7;   
-	static MyServerDatagramSocket mySocket; 
+	static ServerDatagramSocket mySocket; 
 	static DatagramMessage request;
 	
     static String currentUser = "";
@@ -27,7 +27,7 @@ public class Server {
     
     public static void main(String[] args) throws SocketException {
       
-    	mySocket = new MyServerDatagramSocket(serverPort);
+    	mySocket = new ServerDatagramSocket(serverPort);
     	  
     	if (args.length == 1 )
 	         serverPort = Integer.parseInt(args[0]); 
@@ -35,7 +35,7 @@ public class Server {
       	while(true) {
 	      	try {	    	  
 	    	      	  
-	    	  	System.out.println("Echo server ready.");  
+	    	  	System.out.println("Server ready.");  
  		  
 	          	request = mySocket.receiveMessageAndSender();
 	          	System.out.println("Request received");
